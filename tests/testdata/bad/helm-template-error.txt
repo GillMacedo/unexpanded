@@ -1,0 +1,3 @@
+Error: execution error at (drust/templates/secret.yaml:12:21): secrets.adminPassword required (or set secrets.create=false)
+
+Use --debug flag to render out invalid YAML

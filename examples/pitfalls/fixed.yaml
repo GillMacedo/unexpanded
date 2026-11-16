@@ -1,0 +1,70 @@
+# The same app as broken.yaml, with each reference fixed. It must stay quiet.
+apiVersion: v1
+kind: Service
+metadata:
+  name: cache
+spec:
+  selector:
+    app: cache
+  ports:
+    - name: redis
+      port: 6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      initContainers:
+        - name: wait-for-cache
+          image: busybox:1.37
+          command: ["sh", "-c", "until nc -z $(CACHE_SERVICE_HOST) 6379; do sleep 1; done"]
+      containers:
+        - name: api
+          image: ghcr.io/example/api:1.4.0
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: api-db
+                  key: username
+            - name: DATABASE_URL
+              value: postgres://$(DB_USER)@db:5432/app
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          command: ["/api"]
+          args:
+            - --listen=$(POD_IP):8080
+            - --node-name=$(NODE_NAME)
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "/api healthcheck --addr=${POD_IP}:8080"]
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "/api drain --addr=${POD_IP}:8080"]
+          volumeMounts:
+            - name: logs
+              mountPath: /logs
+              subPathExpr: $(POD_NAME)
+      volumes:
+        - name: logs
+          emptyDir: {}

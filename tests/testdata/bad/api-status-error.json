@@ -1,0 +1,14 @@
+{
+  "kind": "Status",
+  "apiVersion": "v1",
+  "metadata": {},
+  "status": "Failure",
+  "message": "deployments.apps \"api\" not found",
+  "reason": "NotFound",
+  "details": {
+    "name": "api",
+    "group": "apps",
+    "kind": "deployments"
+  },
+  "code": 404
+}

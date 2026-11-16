@@ -1,0 +1,14 @@
+{
+  "name": "unexpanded-marketplace",
+  "description": "Marketplace for unexpanded, which finds $(VAR) references in Kubernetes manifests that kubelet will leave as written.",
+  "owner": {
+    "name": "Giulliano Macedo"
+  },
+  "plugins": [
+    {
+      "name": "unexpanded",
+      "source": "./plugin",
+      "description": "Find $(VAR) and ${VAR} references in Kubernetes manifests that reach the program as written, before the pods start with the wrong arguments."
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+error: must build at directory: not a valid directory: evalsymlink failure on '/tmp/nonexistent-dir' : lstat /tmp/nonexistent-dir: no such file or directory

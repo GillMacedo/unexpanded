@@ -1,0 +1,5 @@
+--- FAIL: TestRender (0.00s)
+    y_test.go:6: render failed
+FAIL
+FAIL	y	0.001s
+FAIL

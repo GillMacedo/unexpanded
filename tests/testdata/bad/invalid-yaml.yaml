@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: api
+spec:
+  containers:
+    - name: api
+      image: "ghcr.io/example/api:1.4.0
+      args: ["$(POD_IP)"]
